@@ -1,0 +1,38 @@
+version: '2'
+
+services:
+  emitter:
+    build: .
+    command: php sender.php
+    links:
+      - rabbit:rabbit-master
+    volumes:
+      - ./:/application
+    networks:
+      - isolation
+  deduper:
+    build: .
+    command: php receiver.php
+    links:
+      - rabbit:rabbit-master
+    volumes:
+      - ./:/application
+    networks:
+      - isolation
+  rabbit:
+    image: rabbitmq:3.6-management
+    environment:
+      - RABBITMQ_DEFAULT_USER=root
+      - RABBITMQ_DEFAULT_PASS=admin
+    ports:
+      - "127.0.0.1::15672"
+      - "127.0.0.1::5672"
+      - "127.0.0.1::9004"
+    networks:
+      - isolation
+    hostname: rabbit-master
+    domainname: ulabox
+
+networks:
+  isolation:
+    driver: bridge

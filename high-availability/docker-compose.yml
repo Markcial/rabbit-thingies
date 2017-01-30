@@ -1,0 +1,53 @@
+version: '2'
+
+services:
+  emitter:
+    build: .
+    command: python send.py
+    networks:
+      - isolation
+  receiver:
+    build: .
+    command: python receive.py
+    networks:
+      - isolation
+  haproxy:
+    image: haproxy:1.4
+    ports:
+      - "127.0.0.1::5672"
+    volumes:
+      - ./infrastructure/haproxy/conf/haproxy.cnf:/usr/local/etc/haproxy/haproxy.cfg
+    networks:
+      - isolation
+  rabbit1:
+    image: rabbitmq:3.6-management
+    environment:
+      - RABBITMQ_DEFAULT_USER=root
+      - RABBITMQ_DEFAULT_PASS=admin
+      - RABBITMQ_ERLANG_COOKIE=82c59e56-e4aa-11e6-bf01-fe55135034f3
+    ports:
+      - "127.0.0.1::15672"
+      - "127.0.0.1::5672"
+      - "127.0.0.1::9004"
+    networks:
+      - isolation
+    hostname: rabbit1
+    domainname: ulabox
+  rabbit2:
+    image: rabbitmq:3.6-management
+    environment:
+      - RABBITMQ_DEFAULT_USER=root
+      - RABBITMQ_DEFAULT_PASS=admin
+      - RABBITMQ_ERLANG_COOKIE=82c59e56-e4aa-11e6-bf01-fe55135034f3
+    ports:
+      - "127.0.0.1::15672"
+      - "127.0.0.1::5672"
+      - "127.0.0.1::9004"
+    networks:
+      - isolation
+    hostname: rabbit2
+    domainname: ulabox
+
+networks:
+  isolation:
+    driver: bridge

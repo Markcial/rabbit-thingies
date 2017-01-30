@@ -1,0 +1,22 @@
+global
+    maxconn 4096
+
+defaults
+    log     global
+    mode    tcp
+    option  tcplog
+    retries 3
+    option redispatch
+    maxconn 2000
+    timeout connect 5000
+    timeout client 50000
+    timeout server 50000
+
+listen amqp_front :5672
+    mode            tcp
+    balance         roundrobin
+    timeout client  3h
+    timeout server  3h
+    option          tcpka
+    server          amqp-1 rabbit1:5672  check inter 5s rise 2 fall 3
+    server          amqp-2 rabbit2:5672  check inter 5s rise 2 fall 3
