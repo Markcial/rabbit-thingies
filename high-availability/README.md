@@ -2,7 +2,7 @@
 
 Sample configuration tested for a HA cluster with HAProxy managing connections to a rabbitmq cluster.
 
-The configuration resides on the [infrastructure/haproxy/conf/haproxy.cnf]() file.
+The configuration resides on the [infrastructure/haproxy/conf/haproxy.cnf](infrastructure/haproxy/conf/haproxy.cnf) file.
 
 The shell script `cluster.sh` creates the network with docker and runs the messaging receiver and the producer.
 
